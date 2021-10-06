@@ -74,6 +74,7 @@ function validateReservation(req, res, next) {
 }
 
 async function list(req, res) {
+  // console.log(`list running...`)
   const {date} = req.query;
   res.json({
     data: await service.list(date),
@@ -87,5 +88,5 @@ async function create(req, res, next) {
 
 module.exports = {
   create: [validateReservation, asyncErrorBoundary(create)],
-  list: asyncErrorBoundary(list),
+  list: [asyncErrorBoundary(list)]
 };
