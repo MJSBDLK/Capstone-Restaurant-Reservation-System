@@ -1,10 +1,17 @@
 const knex = require('../db/connection');
 
 function list() {
-    console.log(`service.list running...`)
-    return knex('tables').select('*');
+  return knex('tables').select('*');
+}
+
+function create(table) {
+  return knex('tables')
+    .insert(table)
+    .returning('*')
+    .then((createdRecords) => createdRecords[0]);
 }
 
 module.exports = {
-    list
-}
+  list,
+  create,
+};

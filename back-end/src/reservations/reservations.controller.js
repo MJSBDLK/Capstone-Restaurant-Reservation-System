@@ -46,7 +46,7 @@ function validateReservation(req, res, next) {
   // console.log(`newReservation: `, newReservation);
   if (!newReservation) return next({
     status: 400,
-    message: `no data submitted`
+    message: `no data submitted.`
   });
   const errors = [];
   // console.log(`newReservation:`, newReservation)
@@ -73,6 +73,17 @@ function validateReservation(req, res, next) {
   next();
 }
 
+
+async function create(req, res, next) {
+  const reservation = req.body.data;
+  res.status(201).json({data: await service.create(reservation)});
+}
+
+async function read(req, res) {
+  const {reservationId} = req.params;
+  res.json({data: await service.read(reservationId)});
+}
+
 async function list(req, res) {
   // console.log(`list running...`)
   const {date} = req.query;
@@ -81,12 +92,8 @@ async function list(req, res) {
   });
 }
 
-async function create(req, res, next) {
-  const reservation = req.body.data;
-  res.status(201).json({data: await service.create(reservation)});
-}
-
 module.exports = {
   create: [validateReservation, asyncErrorBoundary(create)],
+  read: [asyncErrorBoundary(read)],
   list: [asyncErrorBoundary(list)]
 };

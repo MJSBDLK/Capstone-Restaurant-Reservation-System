@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { postReservation } from '../utils/api';
-import { today } from '../utils/date-time';
+import { createReservation } from '../utils/api';
+import { formatAsDate, formatAsTime } from '../utils/date-time';
 import ErrorAlert from '../layout/ErrorAlert';
 
 function NewReservation() {
@@ -17,14 +17,18 @@ function NewReservation() {
   const [errors, setErrors] = useState(null);
 
   function submitHandler(event) {
+    const abortController = new AbortController();
     event.preventDefault();
     const newReservation = {...reservation};
-    newReservation.people = parseInt(newReservation.people)
-    postReservation(newReservation)
+    newReservation.reservation_date = formatAsDate(newReservation.reservation_date);
+    newReservation.reservation_time = formatAsTime(newReservation.reservation_time);
+    newReservation.people = parseInt(newReservation.people);
+    createReservation(newReservation)
       .then(() => {
         history.push(`/reservations?date=${reservation.reservation_date}`);
       })
       .catch(setErrors);
+    return () => abortController.abort();
   }
 
   function changeHandler({ target: { name, value } }) {
@@ -42,7 +46,7 @@ function NewReservation() {
       <form onSubmit={submitHandler} className="mb-2">
         <div className="form-row">
           <div className="form-group col-md-4">
-            <label for="first_name">First name: </label>
+            <label htmlFor="first_name">First name: </label>
             <input
               type="text"
               className="form-control"
@@ -54,7 +58,7 @@ function NewReservation() {
             />
           </div>
           <div className="form-group col-md-4">
-            <label for="last_name">Last name: </label>
+            <label htmlFor="last_name">Last name: </label>
             <input
               type="text"
               className="form-control"
@@ -66,7 +70,7 @@ function NewReservation() {
             />
           </div>
           <div className="form-group col-md-4">
-            <label for="mobile_number">Mobile number: </label>
+            <label htmlFor="mobile_number">Mobile number: </label>
             <input
               type="text"
               className="form-control"
@@ -80,7 +84,7 @@ function NewReservation() {
         </div>
         <div className="form-row">
           <div className="form-group col-md-4">
-            <label for="reservation_date">Date of reservation: </label>
+            <label htmlFor="reservation_date">Date of reservation: </label>
             <input
               type="date"
               className="form-control"
@@ -89,11 +93,10 @@ function NewReservation() {
               name="reservation_date"
               onChange={changeHandler}
               required={true}
-              min={today()}
             />
           </div>
           <div className="form-group col-md-4">
-            <label for="reservation_time">Time of reservation: </label>
+            <label htmlFor="reservation_time">Time of reservation: </label>
             <input
               type="time"
               className="form-control"
@@ -101,12 +104,10 @@ function NewReservation() {
               name="reservation_time"
               onChange={changeHandler}
               required={true}
-              min="10:30"
-              max="21:30"
             />
           </div>
           <div className="form-group col-md-4">
-            <label for="people">Number of people: </label>
+            <label htmlFor="people">Number of people: </label>
             <input
               type="number"
               step="1"
