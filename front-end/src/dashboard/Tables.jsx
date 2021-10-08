@@ -20,7 +20,7 @@ export default function Tables() {
     const tableList = tables.map((t, i) => {
         return (
           <tr id={t.table_id} key={i}>
-            <td>{t.reservation_id ? 'Occupied' : 'Open'}</td>
+            <td>{t.reservation_id ? 'Occupied' : 'Free'}</td>
             <td>{t.table_name}</td>
             <td>{t.capacity}</td>
           </tr>

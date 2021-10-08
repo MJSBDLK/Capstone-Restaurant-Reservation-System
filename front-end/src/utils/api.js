@@ -75,7 +75,6 @@ async function fetchJson(url, options, onCancel) {
 
 export async function readReservation(reservationId, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
-  console.log(`url: `, url);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
@@ -102,20 +101,18 @@ export async function createTable(table, signal) {
   return await fetchJson(url, options, []);
 }
 
-export async function updateTable(updatedTable, signal) {
-  const url = new URL(`${API_BASE_URL}/tables/${updatedTable.table_id}`);
+export async function updateTable(table_id, reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const options = {
     method: 'PUT',
     headers,
-    body: JSON.stringify({ data: updatedTable }),
+    body: JSON.stringify({ data: {reservation_id} }),
     signal,
   };
   return await fetchJson(url, options, []);
 }
 
 export async function listTables(signal) {
-  // console.log(`listTables running...`);
   const url = new URL(`${API_BASE_URL}/tables`);
-  // console.log(`url: `, url);
   return await fetchJson(url, { headers, signal }, []);
 }

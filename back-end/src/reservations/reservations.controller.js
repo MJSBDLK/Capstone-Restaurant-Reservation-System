@@ -1,9 +1,8 @@
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const service = require('./reservations.service');
 
-/**
- * List handler for reservation resources
- */
+// Helper functions 
+// #region
 function formatDate(date, time) {
   // console.log(`date, time: `, date, time);
   const result = new Date();
@@ -40,7 +39,10 @@ function restaurantOpen(time) {
   if (resTime > open && resTime < close) return true;
   return false;
 }
+// #endregion
 
+// Validation
+// #region
 function validateReservation(req, res, next) {
   const newReservation = req.body.data;
   // console.log(`newReservation: `, newReservation);
@@ -72,6 +74,7 @@ function validateReservation(req, res, next) {
   }
   next();
 }
+// #endregion
 
 
 async function create(req, res, next) {

@@ -7,10 +7,10 @@ function create(reservation) {
     .then((createdRecords) => createdRecords[0]);
 }
 
-function read(reservationId) {
+function read(reservation_id) {
   return knex('reservations')
     .select('*')
-    .where({ reservationId: reservation_id })
+    .where({ reservation_id })
     .first();
 }
 

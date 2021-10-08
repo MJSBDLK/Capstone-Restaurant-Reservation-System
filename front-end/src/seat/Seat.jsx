@@ -10,6 +10,7 @@ export default function Seat() {
   const [tables, setTables] = useState([]);
   const [reservation, setReservation] = useState({});
   const [errors, setErrors] = useState(null);
+  const [tableSelection, setTableSelection] = useState(null);
 
   //#region
   // We need to load the reservation to know the minimum capacity
@@ -52,38 +53,38 @@ export default function Seat() {
           await readReservation(reservationId, abortController.signal)
         );
       } catch (e) {
-        setErrors(e);
+        setErrors((err)=>[...err, e])
       }
       try {
         const foundTables = await listTables(abortController.signal);
-        const availableTables = foundTables.filter(
-          (table) => table.capacity >= reservation.people
-        );
-        setTables(availableTables);
+        // const availableTables = foundTables.filter(
+        //   (table) => table.capacity >= reservation.people && table.reservation_id === null
+        // );
+        // setTables(availableTables);
+        setTables(foundTables);
       } catch (e) {
-        setErrors(e);
+        setErrors((err)=>[...err, e])
       }
       return () => abortController.abort();
     }
     loadData();
-  }, [reservationId]); // warning is wrong here
+  }, [reservationId, reservation.people]); // warning is wrong here
+
+  function changeHandler({target}) {
+    setTableSelection(target.value);
+  }
 
   function submitHandler(event) {
     event.preventDefault();
-    console.log(`event.target: `, event.target);
     const abortController = new AbortController();
-    const foundTable = tables.find(
-      (table) => table.table_name === event.target.table_id
-    );
-    const updatedTable = { ...foundTable };
-    updateTable(updatedTable, abortController.signal)
+    updateTable(tableSelection, reservation.reservation_id, abortController.signal)
       .then(() => history.push(`/dashboard`))
       .catch(setErrors);
     return () => abortController.abort();
   }
 
-  const tableMapper = tables.map((t, i) => {
-    return <option value={i + 1}>{t.table_name}</option>;
+  const tableMapper = tables.map((t) => {
+    return <option value={t.table_id}>{t.table_name} - {t.capacity}</option>;
   });
 
   return (
@@ -92,14 +93,15 @@ export default function Seat() {
       <ErrorAlert error={errors} />
       <form onSubmit={submitHandler} className="mb-2">
         <div className="form-group col-md-4">
-          <label for="table_id">Table</label>
+          <label htmlFor="table_id">Table</label>
           <select
             name="table_id"
             className="form-control"
             id="table_id"
             placeholder="Table ID"
+            onChange={changeHandler}
           >
-            <option>Select Table</option>
+            <option>{tables.length ? `Select table` : `Loading tables...`}</option>
             {tableMapper}
           </select>
           <div className="">
