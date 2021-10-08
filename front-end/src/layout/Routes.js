@@ -5,6 +5,8 @@ import Dashboard from '../dashboard/Dashboard';
 import NotFound from './NotFound';
 import { today } from '../utils/date-time';
 import NewReservation from '../newReservation/NewReservation';
+import NewTable from '../newTable/NewTable';
+import Seat from '../seat/Seat';
 
 /**
  * Defines all the routes for the application.
@@ -16,13 +18,19 @@ import NewReservation from '../newReservation/NewReservation';
 function Routes() {
 
   const queries = new URLSearchParams(useLocation().search);
-  console.log(`queries: `, queries)
   const date = queries.get('date');
+  // console.log(`date: `, date)
 
   return (
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={'/dashboard'} />
+      </Route>
+      <Route path="/tables/new">
+        <NewTable />
+      </Route>
+      <Route path="/reservations/:reservationId/seat">
+        <Seat />
       </Route>
       <Route path="/reservations/new">
         <NewReservation />

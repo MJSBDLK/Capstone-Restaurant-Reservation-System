@@ -1,9 +1,8 @@
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const service = require('./reservations.service');
 
-/**
- * List handler for reservation resources
- */
+// Helper functions 
+// #region
 function formatDate(date, time) {
   // console.log(`date, time: `, date, time);
   const result = new Date();
@@ -40,13 +39,16 @@ function restaurantOpen(time) {
   if (resTime > open && resTime < close) return true;
   return false;
 }
+// #endregion
 
+// Validation
+// #region
 function validateReservation(req, res, next) {
   const newReservation = req.body.data;
   // console.log(`newReservation: `, newReservation);
   if (!newReservation) return next({
     status: 400,
-    message: `no data submitted`
+    message: `no data submitted.`
   });
   const errors = [];
   // console.log(`newReservation:`, newReservation)
@@ -72,20 +74,29 @@ function validateReservation(req, res, next) {
   }
   next();
 }
+// #endregion
 
-async function list(req, res) {
-  const {date} = req.query;
-  res.json({
-    data: await service.list(date),
-  });
-}
 
 async function create(req, res, next) {
   const reservation = req.body.data;
   res.status(201).json({data: await service.create(reservation)});
 }
 
+async function read(req, res) {
+  const {reservationId} = req.params;
+  res.json({data: await service.read(reservationId)});
+}
+
+async function list(req, res) {
+  // console.log(`list running...`)
+  const {date} = req.query;
+  res.json({
+    data: await service.list(date),
+  });
+}
+
 module.exports = {
   create: [validateReservation, asyncErrorBoundary(create)],
-  list: asyncErrorBoundary(list),
+  read: [asyncErrorBoundary(read)],
+  list: [asyncErrorBoundary(list)]
 };

@@ -7,10 +7,11 @@ exports.up = function (knex) {
     table.date('reservation_date').notNullable();
     table.time('reservation_time').notNullable();
     table.integer('people').notNullable();
+    table.string('status')
     table.timestamps(true, true);
   });
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable('reservations');
+  return knex.schema.dropTableIfExists('reservations');
 };
