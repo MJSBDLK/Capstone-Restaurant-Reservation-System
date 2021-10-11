@@ -1,9 +1,9 @@
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const service = require('./tables.service');
-const reservationsService = require('../reservations/reservations.service')
+const reservationsService = require('../reservations/reservations.service');
 
 function validateData(req, res, next) {
-  const {data} = req.body;
+  const { data } = req.body;
   if (!data)
     return next({
       status: 400,
@@ -25,10 +25,10 @@ function validateFields(req, res, next) {
       message: errors.join(`\n`),
     });
   if (typeof table.capacity !== 'number' || table.capacity < 1)
-  return next({
-    status: 400,
-    message: `capacity must be a number greater than 0.`,
-  });
+    return next({
+      status: 400,
+      message: `capacity must be a number greater than 0.`,
+    });
   next();
 }
 
@@ -44,42 +44,45 @@ function validateTableName(req, res, next) {
 }
 
 async function validateCapacity(req, res, next) {
-  const {table_id} = req.params;
+  const { table_id } = req.params;
   const table = await service.read(table_id);
-  const {people} = res.locals.reservation;
-  console.log(`people: ${people} capacity: ${table.capacity}`)
+  const { people } = res.locals.reservation;
+  console.log(`people: ${people} capacity: ${table.capacity}`);
   if (table.capacity < people) {
     return next({
       status: 400,
-      message: `party size may not exceed table capacity.`
-    })
+      message: `party size may not exceed table capacity.`,
+    });
   }
   next();
 }
 
 async function validateFree(req, res, next) {
-  const {table_id} = req.params;
+  const { table_id } = req.params;
   const table = await service.read(table_id);
-  if (table.reservation_id !== null) return next({
-    status: 400,
-    message: `requested table is occupied.`
-  });
+  if (table.reservation_id !== null)
+    return next({
+      status: 400,
+      message: `requested table is occupied.`,
+    });
   next();
 }
 
 async function validateReservationId(req, res, next) {
-    const {reservation_id} = req.body.data;
-    if (!reservation_id) return next({
-        status: 400,
-        message: `reservation_id required.`
-    })
-    const reservation = await reservationsService.read(reservation_id);
-    if (!reservation) return next({
-        status: 404,
-        message: `reservation ${reservation_id} not found`
-    })
-    res.locals.reservation = reservation;
-    next();
+  const { reservation_id } = req.body.data;
+  if (!reservation_id)
+    return next({
+      status: 400,
+      message: `reservation_id required.`,
+    });
+  const reservation = await reservationsService.read(reservation_id);
+  if (!reservation)
+    return next({
+      status: 404,
+      message: `reservation ${reservation_id} not found`,
+    });
+  res.locals.reservation = reservation;
+  next();
 }
 
 async function create(req, res) {
@@ -88,15 +91,23 @@ async function create(req, res) {
 }
 
 async function read(req, res) {
-  const {table_id} = req.params;
+  const { table_id } = req.params;
   const response = await service.read(table_id);
-  res.json({data: response})
+  res.json({ data: response });
 }
 
 async function update(req, res) {
   const { table_id } = req.params;
-  const {reservation_id} = req.body.data;
+  const { reservation_id } = req.body.data;
   const response = await service.update(table_id, reservation_id);
+  res.json({ data: response });
+}
+
+// 
+async function destroy(req, res) {
+  // This doesn't actually delete the table; it just clears it.
+  const { table_id } = req.params;
+  const response = await service.delete(table_id);
   res.json({ data: response });
 }
 
@@ -118,7 +129,8 @@ module.exports = {
     asyncErrorBoundary(validateReservationId),
     asyncErrorBoundary(validateCapacity),
     asyncErrorBoundary(validateFree),
-    asyncErrorBoundary(update)
+    asyncErrorBoundary(update),
   ],
+  delete: [asyncErrorBoundary(destroy)],
   list: [asyncErrorBoundary(list)],
 };

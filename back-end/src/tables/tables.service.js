@@ -8,10 +8,7 @@ function create(table) {
 }
 
 function read(table_id) {
-  return knex('tables')
-    .select('*')
-    .where({ table_id })
-    .first();
+  return knex('tables').select('*').where({ table_id }).first();
 }
 
 function update(table_id, reservation_id) {
@@ -19,6 +16,14 @@ function update(table_id, reservation_id) {
     .select('*')
     .where({ table_id })
     .update({ reservation_id })
+    .then((createdRecords) => createdRecords[0]);
+}
+
+function destroy(table_id) {
+  return knex('tables')
+    .select('*')
+    .where({ table_id })
+    .update({ reservation_id: null })
     .then((createdRecords) => createdRecords[0]);
 }
 
@@ -30,5 +35,6 @@ module.exports = {
   create,
   read,
   update,
+  delete: destroy,
   list,
 };

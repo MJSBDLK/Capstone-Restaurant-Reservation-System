@@ -58,11 +58,7 @@ async function fetchJson(url, options, onCancel) {
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
 
-
-
-
-
- export async function createReservation(reservation, signal) {
+export async function createReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: 'POST',
@@ -106,7 +102,18 @@ export async function updateTable(table_id, reservation_id, signal) {
   const options = {
     method: 'PUT',
     headers,
-    body: JSON.stringify({ data: {reservation_id} }),
+    body: JSON.stringify({ data: { 'reservation_id': reservation_id } }), // Don't use shorthand here
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+export async function finishTable(table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+  const options = {
+    method: 'DELETE',
+    headers,
+    body: JSON.stringify({ data: { 'reservation_id': null } }), // Don't use shorthand here
     signal,
   };
   return await fetchJson(url, options, []);

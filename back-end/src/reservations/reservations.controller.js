@@ -1,3 +1,4 @@
+const P = require('pino');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const service = require('./reservations.service');
 
@@ -79,6 +80,7 @@ function validateReservation(req, res, next) {
 
 async function create(req, res, next) {
   const reservation = req.body.data;
+  reservation.status = 'Booked'
   res.status(201).json({data: await service.create(reservation)});
 }
 
