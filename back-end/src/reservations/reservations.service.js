@@ -14,15 +14,30 @@ function read(reservation_id) {
     .first();
 }
 
-function list(date) {
-  return knex('reservations as r')
+function update(reservation_id, status) {
+  return knex('reservations')
     .select('*')
-    .where({ 'r.reservation_date': date })
-    .orderBy('r.reservation_time');
+    .where({reservation_id})
+    .update({status})
+    .returning('*')
+    .then((createdRecords)=>createdRecords[0]);
+}
+
+function list(date) {
+  return knex('reservations')
+    .select('*')
+    .where({reservation_date: date})
+    .whereNot({status: 'finished'})
+    .orderBy('reservation_time');
+}
+
+function changeNullToBooked() {
+  return knex
 }
 
 module.exports = {
   create,
   read,
+  update,
   list
 };
