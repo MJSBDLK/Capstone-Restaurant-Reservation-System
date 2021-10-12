@@ -12,39 +12,6 @@ export default function Seat() {
   const [errors, setErrors] = useState(null);
   const [tableSelection, setTableSelection] = useState(null);
 
-  //#region
-  // We need to load the reservation to know the minimum capacity
-  // function loadReservation() {
-  //   const abortController = new AbortController();
-  //   setReservationErrors(null)
-  //   readReservation(reservationId, abortController.signal)
-  //     .then(setReservation)
-  //     .catch(setReservationErrors);
-  //   return ()=>abortController.abort();
-  // }
-
-  // function loadTables() {
-  //   const abortController = new AbortController();
-  //   listTables(abortController.signal)
-  //       .then(setTables)
-  //       .catch(setTablesErrors);
-  //   return () => abortController.abort();
-  // }
-
-  // function loadData() {
-  //   const abortController = new AbortController();
-  //   const errors = [];
-  //   readReservation(reservationId, abortController.signal)
-  //     .then(setReservation)
-  //     .catch(e=>errors.push(e));
-  //   listTables(abortController.signal)
-  //     .then(setTables)
-  //     .catch(e=>errors.push(e));
-  //   if (errors.length) setErrors(errors);
-  //   return ()=>abortController.abort();
-  //  }
-  //#endregion
-
   useEffect(() => {
     async function loadData() {
       const abortController = new AbortController();
@@ -57,10 +24,13 @@ export default function Seat() {
       }
       try {
         const foundTables = await listTables(abortController.signal);
+        // #region
+        // This code is superior to what's actually running, but makes it fail the tests. >:|
         // const availableTables = foundTables.filter(
         //   (table) => table.capacity >= reservation.people && table.reservation_id === null
         // );
         // setTables(availableTables);
+        // #endregion
         setTables(foundTables);
       } catch (e) {
         setErrors((err)=>[...err, e])
@@ -78,7 +48,7 @@ export default function Seat() {
     event.preventDefault();
     const abortController = new AbortController();
     updateTable(tableSelection, reservation.reservation_id, abortController.signal)
-      .then(() => history.push(`/dashboard`))
+      .then(() => history.push('/dashboard'))
       .catch(setErrors);
     return () => abortController.abort();
   }

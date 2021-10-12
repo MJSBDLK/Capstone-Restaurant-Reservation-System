@@ -14,6 +14,16 @@ function read(reservation_id) {
     .first();
 }
 
+// CRUDL - also read
+function search(mobile_number) {
+  return knex('reservations')
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy('reservation_date');
+}
+
 function update(reservation_id, status) {
   return knex('reservations')
     .select('*')
@@ -31,13 +41,10 @@ function list(date) {
     .orderBy('reservation_time');
 }
 
-function changeNullToBooked() {
-  return knex
-}
-
 module.exports = {
   create,
   read,
+  search,
   update,
   list
 };

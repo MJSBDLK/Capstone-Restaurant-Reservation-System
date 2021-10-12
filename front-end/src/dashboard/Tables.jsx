@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {listTables, finishTable} from '../utils/api';
+import {listTables, deleteTable} from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
+import { useHistory } from 'react-router';
 
 export default function Tables() {
     const [tables, setTables] = useState([]);
     const [tablesError, setTablesError] = useState(null);
+    const history = useHistory();
 
     function loadTables() {
         const abortController = new AbortController();
@@ -18,17 +20,19 @@ export default function Tables() {
     useEffect(loadTables, []);
 
     async function deleteHandler(table_id) {
-      const abortController = new AbortController();
-      try {
-        await finishTable(table_id)
-        loadTables();
-      } catch (e) {setTablesError(e)}
-      return ()=>abortController.abort();
+      if(window.confirm(`Is this table ready to seat new guests? This cannot be undone.`)) {
+        const abortController = new AbortController();
+        try {
+          await deleteTable(table_id);
+          history.go(0);
+        } catch (e) {setTablesError(e)}
+        return ()=>abortController.abort();
+      }
     }
 
     function finishButton(table_id) {
       return(
-        <button className="btn btn-danger btn-sm" onClick={()=>deleteHandler(table_id)}>
+        <button className="btn btn-danger btn-sm" data-table-id-finish={table_id} onClick={()=>deleteHandler(table_id)}>
           Finish
         </button>
       )
@@ -38,7 +42,7 @@ export default function Tables() {
         return (
           <tr id={t.table_id} key={i}>
             <td>{t.reservation_id ? finishButton(t.table_id) : ''}</td>
-            <td>{t.reservation_id ? 'Occupied' : 'Free'}</td>
+            <td data-table-id-status={t.table_id}>{t.reservation_id ? 'occupied' : 'free'}</td>
             <td>{t.table_name}</td>
             <td>{t.capacity}</td>
           </tr>
