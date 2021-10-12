@@ -41,7 +41,7 @@ function Dashboard({ date }) {
       </div>
       <div className="d-inline-flex flex-row">
         <div className="col">
-          <Reservations date={date} />
+          <Reservations paramKey={'date'} paramValue={date} />
         </div>
         <Tables />
       </div>

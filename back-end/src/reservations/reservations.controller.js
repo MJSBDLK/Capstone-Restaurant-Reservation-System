@@ -180,8 +180,11 @@ async function update(req, res) {
 }
 
 async function list(req, res) {
-    const { date } = req.query;
-    const response = await service.list(date);
+    const { date, mobile_number } = req.query;
+    console.log(`date: ${date}, mobile_number: ${mobile_number}`);
+    const response = mobile_number
+      ? await service.search(mobile_number)
+      : await service.list(date);
     res.json({ data: response });
   }
 

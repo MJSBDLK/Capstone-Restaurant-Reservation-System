@@ -21,7 +21,7 @@ function Search() {
         <label htmlFor="mobile_number">Mobile number:</label>
         <div className="input-group">
           <input
-            type="tel"
+            type="text"
             className="form-control"
             id="table_name"
             placeholder="Enter a customer's phone number"
@@ -36,7 +36,7 @@ function Search() {
           </div>
         </div>
       </form>
-      {query ? <Reservations date={query} /> : ''}
+      {query ? <Reservations paramKey={"mobile_number"} paramValue={query} /> : ''}
     </div>
   );
 }

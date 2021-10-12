@@ -4,20 +4,26 @@ import ErrorAlert from '../layout/ErrorAlert';
 import {Link} from 'react-router-dom';
 // import {previous, today, next} from '../utils/date-time';
 
-function Reservations({ date }) { // date can actually be any search param?
+function Reservations({ paramKey, paramValue }) { // date can actually be any search param?
+  console.log(`start: paramKey: ${paramKey}, paramValue: ${paramValue}`);
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
   function loadReservations() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({date}, abortController.signal)
+    console.log(`in Load: paramKey: ${paramKey}, paramValue: ${paramValue}`);
+    const params = {};
+    params[paramKey] = paramValue;
+    console.log(`params: `, params);
+
+    listReservations(params, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
   }
 
-  useEffect(loadReservations, [date]);
+  useEffect(loadReservations, [paramKey, paramValue]);
 
   function seatButton(reservation_id) {
     return (
@@ -47,7 +53,7 @@ function Reservations({ date }) { // date can actually be any search param?
 
   return (
     <div className="col">
-      <h4>Reservations for {date}</h4>
+      <h4>Reservations for {paramKey==='mobile_number' ? 'mobile number:':''} {paramValue}</h4>
       <ErrorAlert error={reservationsError} />
       <table className="table table-responsive">
         <thead>
