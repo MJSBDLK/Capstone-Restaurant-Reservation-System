@@ -5,17 +5,17 @@ import {Link} from 'react-router-dom';
 // import {previous, today, next} from '../utils/date-time';
 
 function Reservations({ paramKey, paramValue }) { // date can actually be any search param?
-  console.log(`start: paramKey: ${paramKey}, paramValue: ${paramValue}`);
+  // console.log(`start: paramKey: ${paramKey}, paramValue: ${paramValue}`);
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
   function loadReservations() {
     const abortController = new AbortController();
     setReservationsError(null);
-    console.log(`in Load: paramKey: ${paramKey}, paramValue: ${paramValue}`);
+    // console.log(`in Load: paramKey: ${paramKey}, paramValue: ${paramValue}`);
     const params = {};
     params[paramKey] = paramValue;
-    console.log(`params: `, params);
+    // console.log(`params: `, params);
 
     listReservations(params, abortController.signal)
       .then(setReservations)
@@ -68,7 +68,7 @@ function Reservations({ paramKey, paramValue }) { // date can actually be any se
             <th className="pr-1">Status</th>
           </tr>
         </thead>
-        <tbody>{resList}</tbody>
+        <tbody>{reservations.length ? resList : `No reservations found.`}</tbody>
       </table>
     </div>
   );

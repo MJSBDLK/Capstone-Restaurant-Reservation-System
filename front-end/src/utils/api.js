@@ -92,7 +92,7 @@ export async function listReservations(params, signal) {
   Object.entries(params).forEach(([key, value]) => {
     return url.searchParams.append(key, value.toString());
   });
-  console.log(`url: `, url);
+  // console.log(`url: `, url);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
