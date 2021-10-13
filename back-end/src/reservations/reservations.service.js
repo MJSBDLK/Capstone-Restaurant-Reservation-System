@@ -8,21 +8,51 @@ function create(reservation) {
 }
 
 function read(reservation_id) {
+  return knex('reservations').select('*').where({ reservation_id }).first();
+}
+
+// Updates reservation status only
+function update(reservation_id, status) {
   return knex('reservations')
     .select('*')
     .where({ reservation_id })
-    .first();
+    .update({ status })
+    .returning('*')
+    .then((createdRecords) => createdRecords[0]);
+}
+// CRUDL - the "real" update
+function modify(reservation_id, newReservation) {
+  return knex('reservations')
+    .select('*')
+    .where({ reservation_id })
+    .update(newReservation)
+    .returning('*')
+    .then((createdRecords) => createdRecords[0]);
 }
 
 function list(date) {
-  return knex('reservations as r')
+  return knex('reservations')
     .select('*')
-    .where({ 'r.reservation_date': date })
-    .orderBy('r.reservation_time');
+    .where({reservation_date: date})
+    .whereNotIn('status', ['finished', 'cancelled'])
+    .orderBy('reservation_time');
+}
+
+// CRUDL - also list
+function search(mobile_number) {
+  return knex('reservations')
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, '')}%`
+    )
+    .orderBy('reservation_date');
 }
 
 module.exports = {
   create,
   read,
-  list
+  search,
+  update,
+  modify,
+  list,
 };

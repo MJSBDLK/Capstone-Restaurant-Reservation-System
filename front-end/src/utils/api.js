@@ -58,11 +58,7 @@ async function fetchJson(url, options, onCancel) {
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
 
-
-
-
-
- export async function createReservation(reservation, signal) {
+export async function createReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: 'POST',
@@ -73,11 +69,35 @@ async function fetchJson(url, options, onCancel) {
   return await fetchJson(url, options, []);
 }
 
-export async function readReservation(reservationId, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
+export async function readReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
+}
+
+// This only updates the reservation status
+export async function updateReservation(reservation_id, newStatus, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
+  const options = {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ data: { status: newStatus } }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+// CRUDL: also update - modifies any and all fields
+export async function modifyReservation(newReservation, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${newReservation.reservation_id}`);
+  const options = {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({data: newReservation}),
+    signal,
+  };
+  return await fetchJson(url, options, []);
 }
 
 export async function listReservations(params, signal) {
@@ -85,6 +105,7 @@ export async function listReservations(params, signal) {
   Object.entries(params).forEach(([key, value]) => {
     return url.searchParams.append(key, value.toString());
   });
+  // console.log(`url: `, url);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
@@ -101,12 +122,25 @@ export async function createTable(table, signal) {
   return await fetchJson(url, options, []);
 }
 
+// CRUDL: update - seats a table (cannot make other updates)
 export async function updateTable(table_id, reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const options = {
     method: 'PUT',
     headers,
-    body: JSON.stringify({ data: {reservation_id} }),
+    body: JSON.stringify({ data: { reservation_id: reservation_id } }), // Don't use shorthand here
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+// CRUDL: delete - vacates a table (does not actually delete)
+export async function deleteTable(table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+  const options = {
+    method: 'DELETE',
+    headers,
+    body: JSON.stringify({ data: { reservation_id: null } }), // Don't use shorthand here
     signal,
   };
   return await fetchJson(url, options, []);
