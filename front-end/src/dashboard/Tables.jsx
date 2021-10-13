@@ -19,6 +19,7 @@ export default function Tables() {
 
     useEffect(loadTables, []);
 
+    // This does not delete anything; it just clears the table.
     async function deleteHandler(table_id) {
       if(window.confirm(`Is this table ready to seat new guests? This cannot be undone.`)) {
         const abortController = new AbortController();
@@ -56,10 +57,10 @@ export default function Tables() {
       <table className="table table-responsive">
         <thead>
           <tr>
-            <th className="pr-1">{/* Empty cell */}</th>
-            <th className="pr-1">Status</th>
-            <th className="pr-1">Table Name</th>
-            <th className="pr-1">Capacity</th>
+            <th className="p-2">{/* Empty cell */}</th>
+            <th className="p-2">Status</th>
+            <th className="p-2">Table Name</th>
+            <th className="p-2">Capacity</th>
           </tr>
         </thead>
         <tbody>{tableList}</tbody>

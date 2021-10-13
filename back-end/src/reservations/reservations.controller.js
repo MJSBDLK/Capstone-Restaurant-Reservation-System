@@ -115,13 +115,15 @@ function validateCreate(req, res, next) {
       status: 400,
       message: `Reservation must be between 10:30 AM and 9:30 PM.`,
     });
-  
+
   // Validate status
+  // If modifying a reservation, do not allow modification of reservations which have been seated.
   const unacceptable = ['seated', 'finished'];
-  if (newReservation.status && unacceptable.includes(newReservation.status)) return next({
-    status:400,
-    message:`cannot create a reservation with a status of "seated" or "finished".`
-  });
+  if (newReservation.status && unacceptable.includes(newReservation.status))
+    return next({
+      status: 400,
+      message: `cannot create a reservation with a status of "seated" or "finished".`,
+    });
 
   next();
 }
@@ -138,11 +140,12 @@ async function validateUpdate(req, res, next) {
 
   // Validate status passed in
   const { status } = req.body.data;
-  const acceptable = ['booked', 'seated', 'finished']
-  if (!acceptable.includes(status)) return next({
-    status:400,
-    message: `unrecognized status: ${status}`
-  });
+  const acceptable = ['booked', 'seated', 'finished', 'cancelled'];
+  if (!acceptable.includes(status))
+    return next({
+      status: 400,
+      message: `unrecognized status: ${status}`,
+    });
 
   // Validate found reservation is not 'finished'
   if (foundReservation.status === 'finished')
@@ -151,6 +154,15 @@ async function validateUpdate(req, res, next) {
       message: `a "finished" reservation cannot be updated.`,
     });
 
+  next();
+}
+
+async function validateReservationExists(req, res, next) {
+  const {reservation_id} = req.params;
+  const foundReservation = await service.read(reservation_id);
+  if (!foundReservation) return next({
+    status:404, message: `reservation ${reservation_id} does not exist.`
+  });
   next();
 }
 // #endregion
@@ -179,18 +191,26 @@ async function update(req, res) {
   res.json({ data: response });
 }
 
+// CRUDL - also an "update"
+async function modify(req, res) {
+  const { reservation_id } = req.params;
+  const newReservation = { ...req.body.data };
+  const response = await service.modify(reservation_id, newReservation);
+  res.json({ data: response });
+}
+
 async function list(req, res) {
-    const { date, mobile_number } = req.query;
-    console.log(`date: ${date}, mobile_number: ${mobile_number}`);
-    const response = mobile_number
-      ? await service.search(mobile_number)
-      : await service.list(date);
-    res.json({ data: response });
-  }
+  const { date, mobile_number } = req.query;
+  const response = mobile_number
+    ? await service.search(mobile_number)
+    : await service.list(date);
+  res.json({ data: response });
+}
 
 module.exports = {
   create: [validateCreate, asyncErrorBoundary(create)],
   read: asyncErrorBoundary(read),
   update: [asyncErrorBoundary(validateUpdate), asyncErrorBoundary(update)],
+  modify: [asyncErrorBoundary(validateReservationExists), validateCreate, asyncErrorBoundary(modify)], // same validation used as "create"
   list: asyncErrorBoundary(list),
 };

@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import ErrorAlert from '../layout/ErrorAlert';
 
 export default function Seat() {
-  const { reservationId } = useParams();
+  const { reservation_id } = useParams();
   const history = useHistory();
   const [tables, setTables] = useState([]);
   const [reservation, setReservation] = useState({});
@@ -17,10 +17,11 @@ export default function Seat() {
       const abortController = new AbortController();
       try {
         setReservation(
-          await readReservation(reservationId, abortController.signal)
+          await readReservation(reservation_id, abortController.signal)
         );
       } catch (e) {
-        setErrors((err)=>[...err, e])
+        setErrors(e)
+        //setErrors((err)=>[...err, e])
       }
       try {
         const foundTables = await listTables(abortController.signal);
@@ -33,12 +34,13 @@ export default function Seat() {
         // #endregion
         setTables(foundTables);
       } catch (e) {
-        setErrors((err)=>[...err, e])
+        setErrors(e)
+        // setErrors((err)=>[...err, e])
       }
       return () => abortController.abort();
     }
     loadData();
-  }, [reservationId, reservation.people]); // warning is wrong here
+  }, [reservation_id, reservation.people]); // warning is wrong here
 
   function changeHandler({target}) {
     setTableSelection(target.value);
@@ -59,7 +61,7 @@ export default function Seat() {
 
   return (
     <div>
-      <h1 className="my-2">Seat Reservation #{reservationId}</h1>
+      <h1 className="my-2">Seat Reservation #{reservation_id}</h1>
       <ErrorAlert error={errors} />
       <form onSubmit={submitHandler} className="mb-2">
         <div className="form-group col-md-4">

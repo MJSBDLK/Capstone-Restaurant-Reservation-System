@@ -76,12 +76,25 @@ export async function readReservation(reservation_id, signal) {
     .then(formatReservationTime);
 }
 
+// This only updates the reservation status
 export async function updateReservation(reservation_id, newStatus, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
   const options = {
     method: 'PUT',
     headers,
     body: JSON.stringify({ data: { status: newStatus } }),
+    signal,
+  };
+  return await fetchJson(url, options, []);
+}
+
+// CRUDL: also update - modifies any and all fields
+export async function modifyReservation(newReservation, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${newReservation.reservation_id}`);
+  const options = {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({data: newReservation}),
     signal,
   };
   return await fetchJson(url, options, []);

@@ -4,10 +4,11 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Dashboard from '../dashboard/Dashboard';
 import NotFound from './NotFound';
 import { today } from '../utils/date-time';
-import NewReservation from '../newReservation/NewReservation';
+// import NewReservation from '../newReservation/NewReservation';
 import NewTable from '../newTable/NewTable';
 import Seat from '../seat/Seat';
 import Search from '../search/Search';
+import ReservationForm from '../reservationForm/ReservationForm';
 
 /**
  * Defines all the routes for the application.
@@ -20,7 +21,6 @@ function Routes() {
 
   const queries = new URLSearchParams(useLocation().search);
   const date = queries.get('date');
-  // console.log(`date: `, date)
 
   return (
     <Switch>
@@ -33,14 +33,17 @@ function Routes() {
       <Route path="/tables/new">
         <NewTable />
       </Route>
-      <Route path="/reservations/:reservationId/seat">
+      <Route path="/reservations/new">
+        <ReservationForm />
+      </Route>
+      <Route path="/reservations/:reservation_id/seat">
         <Seat />
       </Route>
-      <Route path="/reservations/new">
-        <NewReservation />
+      <Route path="/reservations/:reservation_id/edit">
+        <ReservationForm />
       </Route>
       <Route path="/reservations">
-        <Dashboard date={date|| today()} />
+        <Dashboard date={date || today()} />
       </Route>
       <Route exact={true} path="/dashboard">
         <Dashboard date={date || today()} />
