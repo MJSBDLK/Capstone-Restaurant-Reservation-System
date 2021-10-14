@@ -12,10 +12,10 @@ import { previous, today, next } from '../utils/date-time';
  */
 function Dashboard({ date }) {
   return (
-    <main>
-      <div className="d-flex-row justify-content-between">
-        <h1>Dashboard</h1>
-        <div className="d-md-flex mb-3">
+    <main className="container mw-100 py-1">
+      <div className="d-flex-col">
+        <h1 className="col text-center text-md-left">Dashboard</h1>
+        <div className="d-flex justify-content-center justify-content-md-start px-3 mb-3">
           <Link
             type="button"
             className="btn btn-secondary btn-sm m-1"
@@ -39,11 +39,13 @@ function Dashboard({ date }) {
           </Link>
         </div>
       </div>
-      <div className="d-inline-flex flex-row">
-        <div className="col">
+      <div className="d-flex-col mw-100">
+        <div className="">
           <Reservations paramKey={'date'} paramValue={date} />
         </div>
-        <Tables />
+        <div className="">
+          <Tables />
+        </div>
       </div>
     </main>
   );

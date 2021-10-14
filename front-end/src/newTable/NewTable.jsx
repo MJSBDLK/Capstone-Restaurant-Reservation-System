@@ -31,10 +31,10 @@ function NewTable() {
 
   return (
     <div>
-      <h1 className="my-2">New Table</h1>
+      <h1 className="col my-2">New Table</h1>
       <ErrorAlert error={errors} />
-      <form onSubmit={submitHandler} className="mb-2">
-        <div className="form-group col-md-4">
+      <form onSubmit={submitHandler} className="m-2">
+        <div className="form-group">
           <label htmlFor="table_name">Table name:</label>
           <input
             type="text"
@@ -46,7 +46,7 @@ function NewTable() {
             required={true}
           />
         </div>
-        <div className="form-group col-md-4">
+        <div className="form-group">
           <label htmlFor="capacity">Table capacity:</label>
           <input
             type="number"

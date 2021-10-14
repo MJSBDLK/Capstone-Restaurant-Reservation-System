@@ -74,7 +74,7 @@ function ReservationForm() {
   }
 
   return (
-    <div>
+    <div className="col">
       <h1 className="my-2">
         {reservation_id ? 'Edit' : 'New'} Reservation
         {reservation_id && ` ${reservation_id}`}
@@ -82,8 +82,8 @@ function ReservationForm() {
       <ErrorAlert error={errors} />
       <form onSubmit={submitHandler} className="mb-2">
         <div className="form-row">
-          <div className="form-group col-md-4">
-            <label htmlFor="first_name">First name: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="first_name">First{'\u00A0'}name:</label>
             <input
               type="text"
               className="form-control"
@@ -94,8 +94,8 @@ function ReservationForm() {
               required={true}
             />
           </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="last_name">Last name: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="last_name">Last{'\u00A0'}name:</label>
             <input
               type="text"
               className="form-control"
@@ -106,8 +106,8 @@ function ReservationForm() {
               required={true}
             />
           </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="mobile_number">Mobile number: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="mobile_number">Mobile{'\u00A0'}number: </label>
             <input
               type="text"
               className="form-control"
@@ -120,8 +120,8 @@ function ReservationForm() {
           </div>
         </div>
         <div className="form-row">
-          <div className="form-group col-md-4">
-            <label htmlFor="reservation_date">Date of reservation: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="reservation_date">Date{'\u00A0'}of{'\u00A0'}reservation: </label>
             <input
               type="date"
               className="form-control"
@@ -132,8 +132,8 @@ function ReservationForm() {
               required={true}
             />
           </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="reservation_time">Time of reservation: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="reservation_time">Time{'\u00A0'}of{'\u00A0'}reservation: </label>
             <input
               type="time"
               className="form-control"
@@ -144,8 +144,8 @@ function ReservationForm() {
               required={true}
             />
           </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="people">Number of people: </label>
+          <div className="form-group m-1 col">
+            <label htmlFor="people">Number{'\u00A0'}of{'\u00A0'}people: </label>
             <input
               type="number"
               step="1"
@@ -159,7 +159,7 @@ function ReservationForm() {
             />
           </div>
         </div>
-        <div>
+        <div className="py-2">
           <button type="submit" className="btn btn-primary m-1">
             Submit
           </button>
