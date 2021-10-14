@@ -64,7 +64,7 @@ export default function Seat() {
       <h1 className="my-2">Seat Reservation #{reservation_id}</h1>
       <ErrorAlert error={errors} />
       <form onSubmit={submitHandler} className="mb-2">
-        <div className="form-group col-md-4">
+        <div className="form-group form-row mx-2">
           <label htmlFor="table_id">Table</label>
           <select
             name="table_id"

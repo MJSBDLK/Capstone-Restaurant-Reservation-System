@@ -84,18 +84,18 @@ function Reservations({ paramKey, paramValue }) {
     if (r.status === null) r.status = 'booked'; // accounting for reservations imported when seeding
     return (
       <tr id={r.reservation_id} key={i} className="justify-content-center">
-        <td>
+        <td className="text-center">
           {r.status === 'booked' ? seatButton(r.reservation_id) : ''}
         </td>
-        <td>{r.first_name}</td>
-        <td>{r.last_name}</td>
-        <td>{r.mobile_number}</td>
-        <td>{r.reservation_date}</td>
-        <td>{r.reservation_time}</td>
-        <td>{r.people}</td>
-        <td data-reservation-id-status={r.reservation_id}>{r.status}</td>
-        <td>{r.status === 'booked' && editButton(r.reservation_id)}</td>
-        <td data-reservation-id-cancel={r.reservation_id}>
+        <td className="text-center">{r.first_name}</td>
+        <td className="text-center">{r.last_name}</td>
+        <td className="text-center">{r.mobile_number}</td>
+        <td className="text-center">{r.reservation_date}</td>
+        <td className="text-center">{r.reservation_time}</td>
+        <td className="text-center">{r.people}</td>
+        <td className="text-center" data-reservation-id-status={r.reservation_id}>{r.status}</td>
+        <td className="text-center">{r.status === 'booked' && editButton(r.reservation_id)}</td>
+        <td className="text-center" data-reservation-id-cancel={r.reservation_id}>
           {r.status === 'booked' && cancelButton(r.reservation_id)}
         </td>
       </tr>
@@ -103,29 +103,29 @@ function Reservations({ paramKey, paramValue }) {
   });
 
   return (
-    <div className="col">
-      <h4>
+    <div className="col mw-100">
+      <h4 className="mw-100 text-center text-sm-left">
         Reservations for {paramKey === 'mobile_number' ? 'mobile number:' : ''}{paramValue}
       </h4>
       <ErrorAlert error={reservationsError} />
-      <table className="table table-responsive">
-        <thead>
-          <tr>
-            <th className="p-2">{/* {'\u00A0'} is a non-breaking space */}</th>
-            <th className="p-2">First{'\u00A0'}Name</th>
-            <th className="p-2">Last{'\u00A0'}Name</th>
-            <th className="p-2">Mobile{'\u00A0'}Number</th>
-            <th className="p-2">Reservation{'\u00A0'}Date</th>
-            <th className="p-2">Reservation{'\u00A0'}Time</th>
-            <th className="p-2">#{'\u00A0'}People</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">{/*empty cell*/}</th>
-            <th className="p-2">{/*empty cell*/}</th>
+      <table className="table mw-100 table-sm table-responsive pb-2">
+        <thead className="mw-100">
+          <tr className="mw-100">
+            <th className="text-center p-1">{/* {'\u00A0'} is a non-breaking space */}</th>
+            <th className="text-center p-1">First{'\u00A0'}Name</th>
+            <th className="text-center p-1">Last{'\u00A0'}Name</th>
+            <th className="text-center p-1">Mobile{'\u00A0'}Number</th>
+            <th className="text-center p-1">Reservation{'\u00A0'}Date</th>
+            <th className="text-center p-1">Reservation{'\u00A0'}Time</th>
+            <th className="text-center p-1">#{'\u00A0'}People</th>
+            <th className="text-center p-1">Status</th>
+            <th className="text-center p-1">{/*empty cell*/}</th>
+            <th className="text-center p-1">{/*empty cell*/}</th>
           </tr>
         </thead>
-        <tbody>{resList}</tbody>
+        <tbody className="mw-100">{resList}</tbody>
       </table>
-      {!reservations.length && <h5 className="m-3">No reservations found.</h5>}
+      {!reservations.length && <h5 className="m-3 mw-100">No reservations found.</h5>}
     </div>
   );
 }
