@@ -13,7 +13,8 @@ The app has four main components: the dashboard, the reservation form, the searc
 The dashboard shows reservations for a given date, defaulting to today.
 There are navigation buttons allowing the user to jump to the previous day, next day, or today.
 There are two subcomponents: the Reservations component, and the Tables component.
-![Image](https://ibb.co/sC02Kk9)
+
+![Image](https://i.ibb.co/0KgcC8y/Dashboard.png)
 
 #### Reservations
 The Reservations component shows reservations for the selected date.
@@ -30,18 +31,21 @@ When clicked, this button frees the table for another reservation to be seated.
 ### Reservation Form
 This component is used both for creating a new reservation and editing an existing one.
 Validation on the backend is mostly shared as well.
-![Image](https://ibb.co/3MtsrVq)
+
+![Image](https://i.ibb.co/Br8Pzvx/New-reservation-form.png)
 
 ### Search
 The search function allows the user to find reservations matching a given mobile number.
 Search also uses the Reservations subcomponent to display matching reservations.
+
 ![Image](https://i.ibb.co/MRCLv54/search.png)
 
 ### New Table
 The New Table component allows for creation of new tables, prompting the user to enter a table name and max capacity.
 There is some minimal validation run on the inputs, ensuring that the table name has at least two characters,
 and that the input for the max capacity is indeed a number.
-![Image](https://ibb.co/Fn30F6V)
+
+![Image](https://i.ibb.co/g69PxyV/new-table.png)
 
 ## Backend
 The backend is a RESTful API, connected to an SQL database hosted on ElephantSQL.
