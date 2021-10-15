@@ -35,7 +35,7 @@ Validation on the backend is mostly shared as well.
 ### Search
 The search function allows the user to find reservations matching a given mobile number.
 Search also uses the Reservations subcomponent to display matching reservations.
-![Image](https://ibb.co/8j7VC4p)
+![Image](https://i.ibb.co/MRCLv54/search.png)
 
 ### New Table
 The New Table component allows for creation of new tables, prompting the user to enter a table name and max capacity.
