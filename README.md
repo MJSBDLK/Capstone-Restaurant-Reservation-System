@@ -32,7 +32,7 @@ When clicked, this button frees the table for another reservation to be seated.
 This component is used both for creating a new reservation and editing an existing one.
 Validation on the backend is mostly shared as well.
 
-![Image](https://i.ibb.co/Br8Pzvx/New-reservation-form.png)
+![Image](https://i.ibb.co/x2Vp4K9/New-reservation-form.png)
 
 ### Search
 The search function allows the user to find reservations matching a given mobile number.
